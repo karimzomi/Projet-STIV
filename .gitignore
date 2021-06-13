@@ -34,3 +34,5 @@ yarn-error.log*
 .vercel
 .env
 test.txt
+TEST.http
+pages\TEST.js
