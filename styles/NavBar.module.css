@@ -1,0 +1,33 @@
+.Navbar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1f1f1f;
+    color: gray;
+
+}
+.Navbar .List{
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style-type: none;
+    padding: 20px;
+    width: 100%;
+
+}
+.List li a{
+padding: 0 100px;
+
+}
+.Link{
+font-size: 1.5em;
+}
+.Navbar .List span{
+    content: '';
+    position: absolute;
+    background-color: #00b0ff;
+    height: 5px;
+    bottom:0px;
+    transition: all 0.5s;
+}

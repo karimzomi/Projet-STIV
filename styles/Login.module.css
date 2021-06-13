@@ -1,0 +1,15 @@
+.Login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex-direction: column;
+}
+.Login input{
+    padding: 5px 0;
+    border-radius: 5px;
+    outline: none;
+}
+.Login input:hover{
+
+}

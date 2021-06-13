@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model bus {
+  id       Int       @id
+  capacit_ Int       @map("capacité")
+  datea    DateTime? @db.Date
+  etat     String    @db.VarChar(50)
+  trajet   trajet[]
+}
+
+model chauffeur {
+  id            Int       @id @default(autoincrement())
+  emp_matricule Int?      @unique
+  dop           DateTime? @db.Timestamp(6)
+  employee      employee? @relation(fields: [emp_matricule], references: [matricule])
+}
+
+model controleur {
+  id              Int       @id @default(autoincrement())
+  emp_matricule   Int?      @unique
+  niveau_scolaire String?   @db.VarChar
+  employee        employee? @relation(fields: [emp_matricule], references: [matricule])
+}
+
+model employee {
+  matricule         Int         @id @default(autoincrement())
+  nom               String?     @db.VarChar(255)
+  pr_nom            String?     @map("prénom") @db.VarChar(255)
+  date_de_naissance DateTime?   @db.Date
+  date_enmbauche    DateTime?   @db.Date
+  chauffeur         chauffeur?
+  controleur        controleur?
+}
+
+model route {
+  id       Int       @id @default(autoincrement())
+  typer    String    @db.VarChar(50)
+  distance Int?
+  troncon  troncon[]
+}
+
+model tempp {
+  id          Int      @id @default(autoincrement())
+  temp_p      DateTime @db.Timestamp(6)
+  code_trajet Int      @default(autoincrement())
+  code_ville  Int?
+}
+
+model trajet {
+  code                       Int      @id @default(autoincrement())
+  bus_id                     Int?
+  hd                         DateTime @db.Timestamp(6)
+  ha                         DateTime @db.Timestamp(6)
+  id_dep                     Int?
+  id_arr                     Int?
+  bus                        bus?     @relation(fields: [bus_id], references: [id])
+  ville_trajet_id_arrToville ville?   @relation("trajet_id_arrToville", fields: [id_arr], references: [code])
+  ville_trajet_id_depToville ville?   @relation("trajet_id_depToville", fields: [id_dep], references: [code])
+  tt                         tt[]
+}
+
+model troncon {
+  id                             Int    @id @default(autoincrement())
+  prix                           Float
+  ville_dep                      Int?
+  ville_arr                      Int?
+  code_route                     Int?
+  route                          route? @relation(fields: [code_route], references: [id])
+  ville_troncon_ville_arrToville ville? @relation("troncon_ville_arrToville", fields: [ville_arr], references: [code])
+  ville_troncon_ville_depToville ville? @relation("troncon_ville_depToville", fields: [ville_dep], references: [code])
+  tt                             tt[]
+}
+
+model ville {
+  code                             Int       @id @default(autoincrement())
+  nom                              String    @db.VarChar(255)
+  trajet_trajet_id_arrToville      trajet[]  @relation("trajet_id_arrToville")
+  trajet_trajet_id_depToville      trajet[]  @relation("trajet_id_depToville")
+  troncon_troncon_ville_arrToville troncon[] @relation("troncon_ville_arrToville")
+  troncon_troncon_ville_depToville troncon[] @relation("troncon_ville_depToville")
+}
+
+model tt {
+  id           Int      @id @default(autoincrement())
+  temp_p       DateTime @db.Timestamp(6)
+  code_trajet  Int?
+  code_troncon Int?
+  trajet       trajet?  @relation(fields: [code_trajet], references: [code])
+  troncon      troncon? @relation(fields: [code_troncon], references: [id])
+}
