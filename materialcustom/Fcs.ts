@@ -1,25 +1,34 @@
 import {
   Theme, makeStyles, createStyles, withStyles,
-  createMuiTheme, TableHead, TableRow,colors
+  createMuiTheme, TableHead, TableRow, colors
 } from '@material-ui/core'
 
 const theme = createMuiTheme({
   palette: {
-    type:'dark',
-    primary:colors.red,
-    secondary:colors.yellow,
+    type: 'dark',
+    primary: colors.red,
+    secondary: colors.green,
   }
 })
-const themeL = createMuiTheme({
-  palette: {
-    type: 'light'
-  }
-})
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
 
     root: {
-      flexGrow: 1,
+
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+        width: '25ch',
+        flex: '0 0 45%'
+      },
+      boxShadow: "0px 0px 5px 5px black",
+      border: '1px solid white',
+      width: 'fit-content',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      margin:'15px'
     },
     paper: {
       padding: theme.spacing(2),
@@ -27,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     container: {
       padding: theme.spacing(2)
-    }
+    },
   }),
 );
 const StyledTableRow = withStyles((theme: Theme) =>
@@ -49,4 +58,4 @@ const StyledTableHead = withStyles((theme: Theme) =>
   }),
 )(TableHead);
 
-export { StyledTableHead, theme, useStyles, StyledTableRow, themeL }
+export { StyledTableHead, theme, useStyles, StyledTableRow }

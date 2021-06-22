@@ -5,9 +5,7 @@ declare global{
 }
 if (!global.prisma) {
     console.log("Connecting to data base 🐘");
-    global.prisma = new PrismaClient({
-        log:['query']
-    })
+    global.prisma = new PrismaClient()
 }
 prisma = global.prisma
 export default prisma

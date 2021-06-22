@@ -4,6 +4,7 @@
     align-items: center;
     background: #1f1f1f;
     color: gray;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5) ;
 
 }
 .Navbar .List{
@@ -12,7 +13,7 @@
     justify-content: space-around;
     align-items: center;
     list-style-type: none;
-    padding: 20px;
+    padding: 10px 20px;
     width: 100%;
 
 }
@@ -27,7 +28,7 @@ font-size: 1.5em;
     content: '';
     position: absolute;
     background-color: #00b0ff;
-    height: 5px;
+    height: 2px;
     bottom:0px;
     transition: all 0.5s;
 }
