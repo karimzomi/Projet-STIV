@@ -10,7 +10,15 @@ const theme = createMuiTheme({
     secondary: colors.green,
   }
 })
-
+const useStylet = makeStyles((theme: Theme) =>
+  createStyles({
+    root:{
+      '& .MuiTextField-root':{
+        margin: theme.spacing(1),
+        minWidth: '150px',
+      }
+    }
+  }))
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
 
@@ -28,7 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-start',
       alignItems: 'center',
       flexWrap: 'wrap',
-      margin:'15px'
+      margin: '15px',
+      padding: '10px'
     },
     paper: {
       padding: theme.spacing(2),
@@ -58,4 +67,4 @@ const StyledTableHead = withStyles((theme: Theme) =>
   }),
 )(TableHead);
 
-export { StyledTableHead, theme, useStyles, StyledTableRow }
+export { StyledTableHead, theme, useStyles, StyledTableRow,useStylet }

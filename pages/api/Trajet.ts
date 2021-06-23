@@ -44,15 +44,22 @@ handler.get(async(req,res)=>{
 })
 handler.post(async(req,res)=>{
     const body = req.body
+    const hd = new Date(body.hd)
+    const ha = new Date(body.ha)
+    try{
     const Ntrajet = await prisma.trajet.create({
         data:{
-            bus_id:body.Bus_id,
-            id_dep:body.dep,
-            id_arr:body.arr,
-            hd:body.hd,
-            ha:body.ha
+            bus_id:body.Bus,
+            id_dep:body.Villedep,
+            id_arr:body.Villearr,
+            hd,
+            ha
         }
-    })
+    })}
+    catch (e){
+        console.log(e);
+        
+    }
 })
 handler.delete(async(req,res)=>{    
     const result = await prisma.trajet.deleteMany({

@@ -11,7 +11,8 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { StyledTableHead, StyledTableRow, theme,useStyles } from '../materialcustom/Fcs'
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import { StyledTableHead, StyledTableRow, theme, useStyles } from '../materialcustom/Fcs'
 
 
 async function fetcher(API_URL) {
@@ -19,27 +20,7 @@ async function fetcher(API_URL) {
     const res = await Data.json()
     return res
 }
-async function AddTrajet() {
-    // const data = await axios.post("http://localhost:3000/api/Trajet", {
-    //     Prix,
-    //     Route,
-    //     Ville_arr,
-    //     Ville_dep
-    // })
-    // const data = await fetch("http://localhost:3000/api/Trajet", {
-    //     method: "POST",
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //         Prix,
-    //         Route,
-    //         Ville_arr,
-    //         Ville_dep
-    //     })
-    // })
-}
+
 async function DeleteElements(params) {
     const data = await axios.delete("http://localhost:3000/api/Trajet", {
         data: {
@@ -100,7 +81,7 @@ function Row(props) {
                 <TableCell align="center">{data.hd}</TableCell>
                 <TableCell align="center">{data.ha}</TableCell>
             </StyledTableRow>
-            <StyledTableRow>
+            <StyledTableRow key={"Info:" + data.code}>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box margin={1}>
@@ -112,28 +93,39 @@ function Row(props) {
         </>
     )
 }
-
+async function AddTrajet(props) {
+    const res = await axios.post("http://localhost:3000/api/Trajet", props)
+}
 function Trajet() {
-    const [Name, setName] = useState("")
+
     const [Counter, SetCounter] = useState(0)
     const [SelectedList, SetSelectedList] = useState([])
     const [FormCompo, SetFormCompo] = useState(null)
-    const { data, error } = useSWR("http://localhost:3000/api/Trajet", fetcher, { revalidateOnFocus: false });
+    const { data, error } = useSWR("http://localhost:3000/api/Trajet", fetcher);
 
     const Form = () => {
         const classes = useStyles()
+        const [Villedep, setVilledep] = useState("")
+        const [Villearr, setVillearr] = useState("")
+        const [Bus, setBus] = useState("")
+        const [ha, setha] = useState("")
+        const [hd, sethd] = useState("")
         return (
-            <form className={classes.root} onSubmit={(e)=>AddTrajet(e)} >
+            <form className={classes.root} onSubmit={(e) => {
+                e.preventDefault()
+                AddTrajet({ Bus, Villedep, Villearr, ha, hd })
+            }} >
                 <TextField
                     select
                     label="Bus"
                     helperText="Select Bus Id"
                     color="secondary"
-                    variant="outlined"
+                    value={Bus}
+                    onChange={(e) => setBus(e.target.value)}
                 >
                     {
                         data.Bus.map((element) => {
-                            return <MenuItem key={element.id} value={element.id} 
+                            return <MenuItem key={element.id} value={element.id}
                                 disabled={element.etat !== "disponible"}>
                                 {element.id}
                             </MenuItem>
@@ -143,14 +135,20 @@ function Trajet() {
                 </TextField>
                 <TextField
                     select
-                    label="Ville"
+                    label="Ville_dep"
                     helperText="Select Bus Id"
-                    color="secondary"
-                    variant="outlined"
+                    color="secondary"                    
                 >
                     {
                         data.ville.map((element) => {
-                            return <MenuItem key={element.id} value={element.nom} >
+                            return <MenuItem 
+                            key={element.code} 
+                            value={element.nom}
+                            onClick={(e) => {setVilledep(element.code)
+                            console.log(Villedep,Villearr);
+                            
+                            }}
+                            >
                                 {element.nom}
                             </MenuItem>
                         })
@@ -159,20 +157,47 @@ function Trajet() {
                 </TextField>
                 <TextField
                     select
-                    label="Ville"
-                    helperText="Select Bus Id"
+                    label="Ville_arr"
                     color="secondary"
-                    variant="outlined"
+
                 >
                     {
                         data.ville.map((element) => {
-                            return <MenuItem key={element.id} value={element.nom} >
+                            return <MenuItem key={element.code}
+                                value={element.nom}
+                                disabled={element.code == Villedep}
+                                onClick={(e) => setVillearr(element.code)}
+                            >
                                 {element.nom}
                             </MenuItem>
                         })
                     }
 
                 </TextField>
+                <TextField
+                    label="TimeB"
+                    color="secondary"
+                    helperText="AAAA-MM-JJ HH:MM:SS"
+                    value={hd}
+                    onChange={(e) => sethd(e.target.value)}
+                />
+                <TextField
+                    label="TimeA"
+                    color="secondary"
+                    helperText="AAAA-MM-JJ HH:MM:SS"
+                    value={ha}
+                    onChange={(e) => setha(e.target.value)}
+                />
+                <Button startIcon={<AddIcon />} type="submit" variant="outlined">
+                    Add
+                </Button>
+                <Button
+                    style={{ margin: "0px 10px" }}
+                    startIcon={<ExitToApp />}
+                    variant="outlined"
+                    onClick={() => SetFormCompo(null)}>
+                    Hide
+                </Button>
             </form>)
     }
 
@@ -217,7 +242,7 @@ function Trajet() {
                     <IconButton
                         onClick={() => {
                             if (!FormCompo) {
-                                SetFormCompo(<Form />)
+                                SetFormCompo(true)
                             }
                         }} color={'secondary'} >
                         <AddIcon />
@@ -232,8 +257,9 @@ function Trajet() {
                     >
                         Delete
                 </Button>
+
                 </Box>
-                {FormCompo}
+                {FormCompo ? <Form /> : null}
             </ThemeProvider >
         )
     }
