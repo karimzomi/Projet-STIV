@@ -2,6 +2,7 @@ import {
   Theme, makeStyles, createStyles, withStyles,
   createMuiTheme, TableHead, TableRow, colors, AccordionSummary
 } from '@material-ui/core'
+import transitions from '@material-ui/core/styles/transitions';
 
 const theme = createMuiTheme({
   palette: {
@@ -29,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '25ch',
         flex: '0 0 45%'
       },
-      boxShadow: "0px 0px 5px 5px black",
-      border: '1px solid white',
+      background:'linear-gradient( 94.3deg,  rgba(26,33,64,1) 10.9%, rgba(81,84,115,1) 87.1% )',
+      boxShadow: "0px 0px 5px 5px rgba(26,33,64,1)",
       width: 'fit-content',
       display: 'flex',
       justifyContent: 'flex-start',
@@ -64,7 +65,12 @@ const StyledAccordionHead = withStyles({
   root: {
     background: 'linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)'
 
-  }
+  },
+  // expanded:{
+  //   '& .MuiAccordionSummary-expandIcon':{
+  //     color:'black'
+  //   }
+  // }
 }
 )(AccordionSummary)
 const StyledTableHead = withStyles((theme: Theme) =>

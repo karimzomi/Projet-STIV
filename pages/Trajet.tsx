@@ -117,6 +117,7 @@ function Trajet() {
             <form className={classes.root} onSubmit={(e) => {
                 e.preventDefault()
                 AddTrajet({ Bus, Villedep, Villearr, ha, hd })
+                SetFormCompo(null)
             }} >
                 <TextField
                     select
@@ -184,7 +185,13 @@ function Trajet() {
                     onChange={(e) => setha(e.target.value)}
                 />
                         
-                <Button color="primary" startIcon={<AddIcon />} type="submit" variant="outlined">
+                <Button 
+                color="primary" 
+                startIcon={<AddIcon />} 
+                type="submit" 
+                variant="outlined"
+                disabled={!ha || !hd || !Villearr || !Villedep || !Bus }
+                >
                     Add
                 </Button>
                 <Button
