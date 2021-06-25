@@ -27,17 +27,8 @@ handler.get(async(req,res)=>{
                 prix:true
             }
         })
-        
-        // const villedes_villearr = await prisma.trajet.findMany({
-        //     select:{
-        //         ville_trajet_id_depToville:true,
-        //         ville_trajet_id_arrToville:true
-        //     }
-        // })
-        console.table(result)
-        // res.send({result:result,villes:villedes_villearr})
- 
-        res.send(result)
+        const villes = await prisma.ville.findMany()        
+        res.send({result,villes})
     }catch(e){
         console.error(e);
 
@@ -47,6 +38,7 @@ handler.get(async(req,res)=>{
 
 handler.post(async(req,res)=>{
     const body = req.body    
+    console.log(body);
     
     const result = await prisma.troncon.create({
         data:{

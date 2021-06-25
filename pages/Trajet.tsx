@@ -21,22 +21,7 @@ async function fetcher(API_URL) {
     return res
 }
 
-async function DeleteElements(params) {
-    const data = await axios.delete("http://localhost:3000/api/Trajet", {
-        data: {
-            params
-        }
-    })
-    // const data = await fetch("http://localhost:3000/api/Trajet", {
-    //     method: "DELETE",
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(params)
-    // })
 
-}
 function Row(props) {
     const [open, setOpen] = useState(false);
     const [select, setselect] = useState(false);
@@ -102,7 +87,25 @@ function Trajet() {
     const [SelectedList, SetSelectedList] = useState([])
     const [FormCompo, SetFormCompo] = useState(null)
     const { data, error } = useSWR("http://localhost:3000/api/Trajet", fetcher);
-
+    async function DeleteElements(params) {
+        const data = await axios.delete("http://localhost:3000/api/Trajet", {
+            data: {
+                params
+            }
+        })
+        SetCounter(0)
+        SetSelectedList([])
+    
+        // const data = await fetch("http://localhost:3000/api/Trajet", {
+        //     method: "DELETE",
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(params)
+        // })
+    
+    }
     const Form = () => {
         const classes = useStyles()
         const [Villedep, setVilledep] = useState("")
@@ -119,7 +122,6 @@ function Trajet() {
                     select
                     label="Bus"
                     helperText="Select Bus Id"
-                    color="secondary"
                     value={Bus}
                     onChange={(e) => setBus(e.target.value)}
                 >
@@ -137,17 +139,13 @@ function Trajet() {
                     select
                     label="Ville_dep"
                     helperText="Select Bus Id"
-                    color="secondary"                    
                 >
                     {
                         data.ville.map((element) => {
                             return <MenuItem 
                             key={element.code} 
                             value={element.nom}
-                            onClick={(e) => {setVilledep(element.code)
-                            console.log(Villedep,Villearr);
-                            
-                            }}
+                            onClick={(e) => {setVilledep(element.code)}}
                             >
                                 {element.nom}
                             </MenuItem>
@@ -158,7 +156,6 @@ function Trajet() {
                 <TextField
                     select
                     label="Ville_arr"
-                    color="secondary"
 
                 >
                     {
@@ -176,25 +173,25 @@ function Trajet() {
                 </TextField>
                 <TextField
                     label="TimeB"
-                    color="secondary"
                     helperText="AAAA-MM-JJ HH:MM:SS"
                     value={hd}
                     onChange={(e) => sethd(e.target.value)}
                 />
                 <TextField
                     label="TimeA"
-                    color="secondary"
                     helperText="AAAA-MM-JJ HH:MM:SS"
                     value={ha}
                     onChange={(e) => setha(e.target.value)}
                 />
-                <Button startIcon={<AddIcon />} type="submit" variant="outlined">
+                        
+                <Button color="primary" startIcon={<AddIcon />} type="submit" variant="outlined">
                     Add
                 </Button>
                 <Button
                     style={{ margin: "0px 10px" }}
                     startIcon={<ExitToApp />}
                     variant="outlined"
+                    color="secondary"
                     onClick={() => SetFormCompo(null)}>
                     Hide
                 </Button>
@@ -240,18 +237,19 @@ function Trajet() {
                 </Box>
                 <Box m={'15px'} display="flex" justifyContent="flex-end" alignItems="center" alignContent="flex-end" p={1} >
                     <IconButton
+                        color="primary"
                         onClick={() => {
                             if (!FormCompo) {
                                 SetFormCompo(true)
                             }
-                        }} color={'secondary'} >
+                        }}  >
                         <AddIcon />
                     </IconButton>
 
                     <Button
                         disabled={Counter == 0}
                         startIcon={<DeleteIcon />}
-                        color="primary"
+                        color="secondary"
                         variant="outlined"
                         onClick={() => DeleteElements(SelectedList)}
                     >

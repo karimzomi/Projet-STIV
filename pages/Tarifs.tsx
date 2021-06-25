@@ -1,19 +1,19 @@
-import Link from "next/link"
-import { useEffect, useState } from 'react'
-import useSWR, { mutate } from 'swr'
+import {useState } from 'react'
+import useSWR from 'swr'
 import {
     Collapse, Checkbox, IconButton,
     Paper, Box, TableBody,
     Table, TableCell, TableContainer,
     ThemeProvider, TextField, MenuItem,
-    TableRow, Button
+    TableRow, Button, makeStyles, Accordion, AccordionDetails
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { StyledTableHead, theme, useStylet } from '../materialcustom/Fcs'
+import { StyledTableHead, theme, useStylet, StyledAccordionHead } from '../materialcustom/Fcs'
 import axios from "axios"
+import { AttachMoney } from "@material-ui/icons"
 
 async function fetcher(API_URL) {
     const Data = await fetch(API_URL, { method: "GET" })
@@ -45,7 +45,7 @@ function Row(props) {
     }
     return (
         <>
-            <TableRow hover selected={select} key={data.id}>
+            <TableRow hover selected={select} key={data.id} >
                 <TableCell padding="checkbox">
                     <Checkbox
                         checked={select}
@@ -78,25 +78,32 @@ function Row(props) {
 function Home() {
     const [Counter, SetCounter] = useState(0)
     const [SelectedList, SetSelectedList] = useState([])
-    const [Villes, SetVilles] = useState([])
-    const [EditRow, SetEditRow] = useState(false)
-    //Add Tarif
-    const [Prix, setPrix] = useState("")
-    const [Ville_arr, setVille_arr] = useState("")
-    const [Ville_dep, setVille_dep] = useState("")
-    const [Route, setRoute] = useState("")
-
-    const classes = useStylet()
-
     const { data, error } = useSWR("http://localhost:3000/api/Tarif", fetcher, { refreshInterval: 2 });
-    useEffect(() => {
-        const fetchData = async () => {
-            const Data = await fetch("http://localhost:3000/api/Villes", { method: "GET" })
-            const res = await Data.json()
-            SetVilles(res.villes)
-        };
-        fetchData()
-    }, [])
+
+    //Add Tarif
+    const [Prix, setPrix] = useState(0)
+    const [Ville_dep, setVille_dep] = useState(data ? data.villes[0].code : 1)
+    const [Ville_arr, setVille_arr] = useState(data ? data.villes[1].code : 2)
+    const [Route, setRoute] = useState(1)
+    //C Tarif
+    const [vd, setVd] = useState(data ? data.villes[0].code : 1)
+    const [va, setVa] = useState(data ? data.villes[1].code : 2)
+    const [R, setR] = useState(1)
+
+    const useStyles = makeStyles({
+        root: {
+            background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+            border: 0,
+            borderRadius: 3,
+            boxShadow: '0 0px 5px 2px rgba(255, 105, 135, .3)',
+            color: 'white',
+            height: 48,
+            padding: '0 30px',
+        },
+    });
+    const classes = useStylet()
+    const test = useStyles()
+
     async function AddTarif() {
         const data = await axios.post("http://localhost:3000/api/Tarif", {
             Prix,
@@ -124,6 +131,8 @@ function Home() {
                 params
             }
         })
+        SetCounter(0)
+        SetSelectedList([])
         // const data = await fetch("http://localhost:3000/api/Tarif", {
         //     method: "DELETE",
         //     headers: {
@@ -133,6 +142,12 @@ function Home() {
         //     body: JSON.stringify(params)
         // })
 
+    }
+    function Calculer(params) {
+        let result
+        data.map((element) => {
+
+        })
     }
     if (error) {
         return <h1>Error</h1>
@@ -145,7 +160,7 @@ function Home() {
                     <Box m={'15px'}>
                         <Paper variant="outlined">
                             <TableContainer >
-                                <Table stickyHeader>
+                                <Table stickyHeader >
                                     <StyledTableHead>
                                         <TableRow>
                                             <TableCell align="center">{Counter}</TableCell>
@@ -157,80 +172,93 @@ function Home() {
                                         </TableRow>
                                     </StyledTableHead>
                                     <TableBody>
-                                        {data.map((element) => <Row data={element} Counter={Counter} SetCounter={SetCounter} SetSelectedList={SetSelectedList} SelectedList={SelectedList} />)}
-                                        <TableRow style={EditRow ? { display: 'table-row' } : { display: 'none' }} >
-                                            <TableCell align='center' colSpan={2}>
-                                                <Button variant='outlined' color={'secondary'} onClick={() => {
-                                                    AddTarif()
-                                                    SetEditRow(false)
+                                        {data.result.map((element) => <Row data={element} Counter={Counter} SetCounter={SetCounter} SetSelectedList={SetSelectedList} SelectedList={SelectedList} />)}
+                                        <TableRow>
+                                            <TableCell colSpan={7}>
+                                                <Accordion >
+                                                    <StyledAccordionHead
+                                                        expandIcon={<AddIcon />}
+                                                    >
+                                                        Ajouter
+                                                </StyledAccordionHead>
+                                                    <AccordionDetails>
+                                                        <Table>
+                                                            <TableRow>
+                                                                <TableCell align='center' colSpan={2}>
+                                                                    <Button color="primary" variant='outlined' onClick={() => {
+                                                                        AddTarif()
 
-                                                }} >Add</Button>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <TextField
-                                                    select
-                                                    label="Ville_dep"
-                                                    helperText="Select Bus Id"
-                                                    color="secondary"
-                                                    variant="outlined"
-                                                >
-                                                    {
-                                                        Villes.map((element) => {
-                                                            return <MenuItem
-                                                                key={element.code}
-                                                                value={element.nom}
-                                                                onClick={(e) => {
-                                                                    setVille_dep(element.code)
-                                                                }}
-                                                            >
-                                                                {element.nom}
-                                                            </MenuItem>
-                                                        })
-                                                    }
+                                                                    }} >Add</Button>
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <TextField
+                                                                        value={Ville_dep}
+                                                                        onChange={(e) => {
+                                                                            setVille_dep(e.target.value)
+                                                                        }}
+                                                                        select
+                                                                        label="Ville_dep"
+                                                                        variant="outlined"
+                                                                    >
+                                                                        {
+                                                                            data.villes.map((element) => {
+                                                                                return <MenuItem
+                                                                                    key={element.code}
+                                                                                    value={element.code}
+                                                                                >
+                                                                                    {element.nom}
+                                                                                </MenuItem>
+                                                                            })
+                                                                        }
 
-                                                </TextField>
+                                                                    </TextField>
 
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <TextField
-                                                    select
-                                                    label="Ville_arr"
-                                                    helperText="Select Bus Id"
-                                                    color="secondary"
-                                                    variant="outlined"
-                                                >
-                                                    {
-                                                        Villes.map((element) => {
-                                                            return <MenuItem
-                                                                key={element.code}
-                                                                value={element.nom}
-                                                                onClick={(e) => {
-                                                                    setVille_arr(element.code)
-                                                                }}
-                                                            >
-                                                                {element.nom}
-                                                            </MenuItem>
-                                                        })
-                                                    }
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <TextField
+                                                                        select
+                                                                        label="Ville_arr"
+                                                                        variant="outlined"
+                                                                        value={Ville_arr}
+                                                                        onChange={(e) => setVille_arr(e.target.value)}
+                                                                    >
+                                                                        {
+                                                                            data.villes.map((element) => {
+                                                                                return <MenuItem
+                                                                                    key={element.code}
+                                                                                    value={element.code}
+                                                                                    disabled={Ville_dep == element.code}
+                                                                                >
+                                                                                    {element.nom}
+                                                                                </MenuItem>
+                                                                            })
+                                                                        }
 
-                                                </TextField>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <TextField select
-                                                    label="Route"
-                                                    value={Route}
-                                                    variant="outlined"
-                                                    onChange={(e) => setRoute(e.target.value)}>
-                                                    <MenuItem value={1}>route nationale</MenuItem>
-                                                    <MenuItem value={2}>autoroute</MenuItem>
-                                                </TextField>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <TextField
-                                                    type="number"
-                                                    value={Prix}
-                                                    onChange={(e) => setPrix(e.target.value)}
-                                                />
+                                                                    </TextField>
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <TextField select
+                                                                        label="Route"
+                                                                        value={R}
+                                                                        variant="outlined"
+                                                                        onChange={(e) => setR(e.target.value)}>
+                                                                        <MenuItem value={1}>route nationale</MenuItem>
+                                                                        <MenuItem value={2}>autoroute</MenuItem>
+                                                                    </TextField>
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <TextField
+                                                                        type="number"
+                                                                        variant="outlined"
+                                                                        label="Prix"
+                                                                        value={Prix}
+                                                                        onChange={(e) => setPrix(Number.parseInt(e.target.value))}
+                                                                    />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </Table>
+                                                    </AccordionDetails>
+                                                </Accordion>
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>
@@ -242,7 +270,7 @@ function Home() {
                     <Box m={'15px'} display="flex" justifyContent="center" alignItems="center" flexDirection="row-reverse" p={1} >
                         <IconButton
                             disabled={Counter == 0}
-                            color={'primary'}
+                            color={'secondary'}
                             onClick={() => {
                                 DeleteElements(SelectedList)
                             }
@@ -250,25 +278,25 @@ function Home() {
                         >
                             <DeleteIcon />
                         </IconButton>
-                        <IconButton onClick={() => {
-                            SetEditRow(true)
 
-                        }} color={'secondary'} >
-                            <AddIcon />
-                        </IconButton>
-                        <Box className={classes.root} flexGrow={1} display="flex" justifyContent="space-around">
+                        <Box className={classes.root}
+                            flexGrow={1}
+                            display="flex"
+                            justifyContent="space-around"
+                            alignItems="center">
                             <TextField
                                 select
-                                label="Ville_des"
-                                color="secondary"
+                                label="Ville_dep"
+                                value={vd}
+                                onChange={(e) => { setVd(e.target.value) }}
+
                                 variant="outlined"
                             >
                                 {
-                                    Villes.map((element) => {
+                                    data.villes.map((element) => {
                                         return <MenuItem
                                             key={element.code}
-                                            value={element.nom}
-
+                                            value={element.code}
                                         >
                                             {element.nom}
                                         </MenuItem>
@@ -278,15 +306,16 @@ function Home() {
                             <TextField
                                 select
                                 label="Ville_arr"
-                                color="secondary"
+                                value={va}
+                                onChange={(e) => { setVa(e.target.value) }}
                                 variant="outlined"
                             >
                                 {
-                                    Villes.map((element) => {
+                                    data.villes.map((element) => {
                                         return <MenuItem
                                             key={element.code}
-                                            value={element.nom}
-
+                                            value={element.code}
+                                            disabled={element.code == vd}
                                         >
                                             {element.nom}
                                         </MenuItem>
@@ -295,12 +324,25 @@ function Home() {
                             </TextField>
                             <TextField select
                                 label="Route"
-                                value={Route}
                                 variant="outlined"
-                                >
-                                <MenuItem value={1}>route nationale</MenuItem>
-                                <MenuItem value={2}>autoroute</MenuItem>
+                                value={Route}
+                                onChange={(e) => setRoute(e.target.value)}
+                            >
+                                <MenuItem
+                                    value={1}
+                                >route nationale</MenuItem>
+                                <MenuItem
+                                    value={2}
+                                >autoroute</MenuItem>
                             </TextField>
+                            <Button
+                                startIcon={<AttachMoney />}
+                                onClick={Calculer}
+                                variant='outlined'
+                                className={test.root}
+                                disabled={(!va || !vd || !R)}
+                            >Calc
+                            </Button>
                         </Box>
                     </Box>
                 </ThemeProvider >

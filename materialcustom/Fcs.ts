@@ -1,19 +1,19 @@
 import {
   Theme, makeStyles, createStyles, withStyles,
-  createMuiTheme, TableHead, TableRow, colors
+  createMuiTheme, TableHead, TableRow, colors, AccordionSummary
 } from '@material-ui/core'
 
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
-    primary: colors.red,
-    secondary: colors.green,
+    primary: colors.green,
+    secondary: colors.red,
   }
 })
 const useStylet = makeStyles((theme: Theme) =>
   createStyles({
-    root:{
-      '& .MuiTextField-root':{
+    root: {
+      '& .MuiTextField-root': {
         margin: theme.spacing(1),
         minWidth: '150px',
       }
@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       flexWrap: 'wrap',
       margin: '15px',
-      padding: '10px'
+      padding: '10px',
+
     },
     paper: {
       padding: theme.spacing(2),
@@ -51,14 +52,21 @@ const useStyles = makeStyles((theme: Theme) =>
 const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      '&:nth-of-type(odd)': {
+      '&:nth-of-type(even)': {
         backgroundColor: theme.palette.action.hover,
-      },
+      }
     },
   }),
 )(TableRow);
 
+const StyledAccordionHead = withStyles({
 
+  root: {
+    background: 'linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)'
+
+  }
+}
+)(AccordionSummary)
 const StyledTableHead = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -67,4 +75,4 @@ const StyledTableHead = withStyles((theme: Theme) =>
   }),
 )(TableHead);
 
-export { StyledTableHead, theme, useStyles, StyledTableRow,useStylet }
+export { StyledTableHead, theme, useStyles, StyledTableRow, useStylet, StyledAccordionHead }
