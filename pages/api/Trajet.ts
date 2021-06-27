@@ -37,8 +37,8 @@ handler.get(async(req,res)=>{
         const ville = await prisma.ville.findMany()        
         res.status(200).send({Trajets:results,Bus,ville})
     }catch(e){
-        console.error(e);
-        res.status(500)
+        res.status(500).send({Error:e})
+
     }
 
 })
@@ -55,10 +55,12 @@ handler.post(async(req,res)=>{
             hd,
             ha
         }
-    })}
+    })
+    res.status(200).send({})
+}
     catch (e){
-        console.log(e);
-        
+        res.status(500).send({Error:e})
+
     }
 })
 handler.delete(async(req,res)=>{    
@@ -67,5 +69,7 @@ handler.delete(async(req,res)=>{
             code: {in:req.body.params}
         }
     })
+    res.status(200).send({})
+
 })
 export default handler
