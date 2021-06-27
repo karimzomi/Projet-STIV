@@ -108,11 +108,11 @@ function Trajet() {
     }
     const Form = () => {
         const classes = useStyles()
-        const [Villedep, setVilledep] = useState("")
-        const [Villearr, setVillearr] = useState("")
-        const [Bus, setBus] = useState("")
-        const [ha, setha] = useState("")
-        const [hd, sethd] = useState("")
+        const [Villedep, setVilledep] = useState<String>()
+        const [Villearr, setVillearr] = useState<String>()
+        const [Bus, setBus] = useState<String>()
+        const [ha, setha] = useState<String>()
+        const [hd, sethd] = useState<String>()
         return (
             <form className={classes.root} onSubmit={(e) => {
                 e.preventDefault()
@@ -146,7 +146,10 @@ function Trajet() {
                             return <MenuItem 
                             key={element.code} 
                             value={element.nom}
-                            onClick={(e) => {setVilledep(element.code)}}
+                            disabled={element.code == Villearr}
+                            onClick={(e) => {
+                                setVilledep(element.code)
+                            }}
                             >
                                 {element.nom}
                             </MenuItem>
@@ -175,12 +178,14 @@ function Trajet() {
                 <TextField
                     label="TimeB"
                     helperText="AAAA-MM-JJ HH:MM:SS"
+                    inputProps={{pattern:'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'}}
                     value={hd}
                     onChange={(e) => sethd(e.target.value)}
                 />
                 <TextField
                     label="TimeA"
                     helperText="AAAA-MM-JJ HH:MM:SS"
+                    inputProps={{pattern:'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'}}
                     value={ha}
                     onChange={(e) => setha(e.target.value)}
                 />

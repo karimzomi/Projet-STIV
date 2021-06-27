@@ -1,4 +1,4 @@
-import {useState } from 'react'
+import { useState } from 'react'
 import useSWR from 'swr'
 import {
     Collapse, Checkbox, IconButton,
@@ -81,7 +81,7 @@ function Home() {
     const { data, error } = useSWR("http://localhost:3000/api/Tarif", fetcher, { refreshInterval: 2 });
 
     //Add Tarif
-    const [Prix, setPrix] = useState(0)
+    const [Prix, setPrix] = useState(1)
     const [Ville_dep, setVille_dep] = useState(data ? data.villes[0].code : 1)
     const [Ville_arr, setVille_arr] = useState(data ? data.villes[1].code : 2)
     const [Route, setRoute] = useState(1)
@@ -205,6 +205,7 @@ function Home() {
                                                                                 return <MenuItem
                                                                                     key={element.code}
                                                                                     value={element.code}
+                                                                                    disabled={element.code == Ville_arr}
                                                                                 >
                                                                                     {element.nom}
                                                                                 </MenuItem>
@@ -252,6 +253,7 @@ function Home() {
                                                                         variant="outlined"
                                                                         label="Prix"
                                                                         value={Prix}
+                                                                        inputProps={{ min: 1 }}
                                                                         onChange={(e) => setPrix(Number.parseInt(e.target.value))}
                                                                     />
                                                                 </TableCell>
