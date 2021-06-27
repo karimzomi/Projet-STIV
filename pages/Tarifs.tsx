@@ -5,7 +5,7 @@ import {
     Paper, Box, TableBody,
     Table, TableCell, TableContainer,
     ThemeProvider, TextField, MenuItem,
-    TableRow, Button, makeStyles, Accordion, AccordionDetails
+    TableRow, Button, makeStyles, Accordion, AccordionDetails, Tooltip
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
@@ -22,7 +22,6 @@ async function fetcher(API_URL) {
 }
 
 function Row(props) {
-    const [open, setOpen] = useState(false);
     const [select, setselect] = useState(false);
     const data = props.data
     const Counter = props.Counter
@@ -52,25 +51,14 @@ function Row(props) {
                         onClick={AddItem}
                     />
                 </TableCell>
-                <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
+
+                <TableCell align="center">{data.id}</TableCell>
                 <TableCell align="center">{data.ville_troncon_ville_depToville.nom}</TableCell>
                 <TableCell align="center">{data.ville_troncon_ville_arrToville.nom}</TableCell>
                 <TableCell align="center">{data.route.typer}</TableCell>
                 <TableCell align="center">{data.prix + " DT"}</TableCell>
             </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box margin={1}>
-                            <p>Sup</p>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
+
         </>
     )
 }
@@ -88,7 +76,8 @@ function Home() {
     //C Tarif
     const [vd, setVd] = useState(data ? data.villes[0].code : 1)
     const [va, setVa] = useState(data ? data.villes[1].code : 2)
-    const [R, setR] = useState(1)
+    const [R, setR] = useState("autoroute")
+    const [result, setResult] = useState(0)
 
     const useStyles = makeStyles({
         root: {
@@ -143,11 +132,23 @@ function Home() {
         // })
 
     }
-    function Calculer(params) {
-        let result
-        data.map((element) => {
+    function Calculer() {
+        let result = 0
+        var x = vd
+        var y = va
+        for (let i = 0; i < data.result.length; i++) {
+            const element = data.result[i];
+            const t = element.ville_troncon_ville_depToville.code
+            const a = element.ville_troncon_ville_arrToville.code
 
-        })
+            if (t == x && element.route.typer == R) {
+                x = a
+                result += element.prix
+            }
+            if (a == y && element.route.typer == R) break;
+        }
+        setResult(result);
+
     }
     if (error) {
         return <h1>Error</h1>
@@ -164,7 +165,7 @@ function Home() {
                                     <StyledTableHead>
                                         <TableRow>
                                             <TableCell align="center">{Counter}</TableCell>
-                                            <TableCell align="center">Info</TableCell>
+                                            <TableCell align="center">ID</TableCell>
                                             <TableCell align="center">ville_dep</TableCell>
                                             <TableCell align="center">ville_des</TableCell>
                                             <TableCell align="center">typer</TableCell>
@@ -240,9 +241,9 @@ function Home() {
                                                                 <TableCell align="center">
                                                                     <TextField select
                                                                         label="Route"
-                                                                        value={R}
+                                                                        value={Route}
                                                                         variant="outlined"
-                                                                        onChange={(e) => setR(e.target.value)}>
+                                                                        onChange={(e) => setRoute(Number.parseInt(e.target.value))}>
                                                                         <MenuItem value={1}>route nationale</MenuItem>
                                                                         <MenuItem value={2}>autoroute</MenuItem>
                                                                     </TextField>
@@ -269,17 +270,24 @@ function Home() {
 
                         </Paper>
                     </Box>
-                    <Box m={'15px'} display="flex" justifyContent="center" alignItems="center" flexDirection="row-reverse" p={1} >
-                        <IconButton
-                            disabled={Counter == 0}
-                            color={'secondary'}
-                            onClick={() => {
-                                DeleteElements(SelectedList)
-                            }
-                            }
-                        >
-                            <DeleteIcon />
-                        </IconButton>
+                    <Box m={'15px'}
+                        display="flex"
+                        flexDirection="row-reverse" >
+                        <Tooltip title="Delete" arrow>
+                            <span>
+                            <IconButton
+                                disabled={Counter == 0}
+                                color={'secondary'}
+                                onClick={() => {
+                                    DeleteElements(SelectedList)
+                                }
+                                }
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                            </span>
+                        </Tooltip>
+                    </Box>
 
                         <Box className={classes.root}
                             flexGrow={1}
@@ -299,6 +307,8 @@ function Home() {
                                         return <MenuItem
                                             key={element.code}
                                             value={element.code}
+                                            disabled={element.code == va}
+
                                         >
                                             {element.nom}
                                         </MenuItem>
@@ -327,14 +337,14 @@ function Home() {
                             <TextField select
                                 label="Route"
                                 variant="outlined"
-                                value={Route}
-                                onChange={(e) => setRoute(e.target.value)}
+                                value={R}
+                                onChange={(e) => setR(e.target.value)}
                             >
                                 <MenuItem
-                                    value={1}
+                                    value={"route nationale"}
                                 >route nationale</MenuItem>
                                 <MenuItem
-                                    value={2}
+                                    value={"autoroute"}
                                 >autoroute</MenuItem>
                             </TextField>
                             <Button
@@ -343,10 +353,10 @@ function Home() {
                                 variant='outlined'
                                 className={test.root}
                                 disabled={(!va || !vd || !R)}
-                            >Calc
+                            >Calculer
                             </Button>
+                            <h2 style={{ color: "white" }}>{result + " DT"}</h2>
                         </Box>
-                    </Box>
                 </ThemeProvider >
             </>
         )

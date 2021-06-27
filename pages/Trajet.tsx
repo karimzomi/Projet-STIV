@@ -2,15 +2,13 @@ import { useState } from 'react'
 import useSWR from 'swr'
 import axios from 'axios'
 import {
-    Box, Collapse, Checkbox, IconButton,
+    Box, Checkbox, IconButton,
     Paper, TableBody,
     Table, TableCell, TableContainer,
     ThemeProvider, Button, TextField, MenuItem
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { StyledTableHead, StyledTableRow, theme, useStyles } from '../materialcustom/Fcs'
 
@@ -23,7 +21,6 @@ async function fetcher(API_URL) {
 
 
 function Row(props) {
-    const [open, setOpen] = useState(false);
     const [select, setselect] = useState(false);
     const data = props.data
     const Counter = props.Counter
@@ -54,11 +51,6 @@ function Row(props) {
                         onClick={AddItem}
                     />
                 </TableCell>
-                <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
                 <TableCell align="center" >{data.code}</TableCell>
                 <TableCell align="center">{data.bus_id}</TableCell>
                 <TableCell align="center">{data.ville_trajet_id_depToville.nom}</TableCell>
@@ -66,15 +58,7 @@ function Row(props) {
                 <TableCell align="center">{data.hd}</TableCell>
                 <TableCell align="center">{data.ha}</TableCell>
             </StyledTableRow>
-            <StyledTableRow key={"Info:" + data.code}>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box margin={1}>
-                            <p>Sup</p>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </StyledTableRow>
+
         </>
     )
 }
@@ -86,7 +70,7 @@ function Trajet() {
     const [Counter, SetCounter] = useState(0)
     const [SelectedList, SetSelectedList] = useState([])
     const [FormCompo, SetFormCompo] = useState(null)
-    const { data, error } = useSWR("http://localhost:3000/api/Trajet", fetcher);
+    const { data, error } = useSWR("http://localhost:3000/api/Trajet", fetcher, { refreshInterval: 2 });
     async function DeleteElements(params) {
         const data = await axios.delete("http://localhost:3000/api/Trajet", {
             data: {
@@ -95,7 +79,7 @@ function Trajet() {
         })
         SetCounter(0)
         SetSelectedList([])
-    
+
         // const data = await fetch("http://localhost:3000/api/Trajet", {
         //     method: "DELETE",
         //     headers: {
@@ -104,7 +88,7 @@ function Trajet() {
         //     },
         //     body: JSON.stringify(params)
         // })
-    
+
     }
     const Form = () => {
         const classes = useStyles()
@@ -129,7 +113,8 @@ function Trajet() {
                     {
                         data.Bus.map((element) => {
                             return <MenuItem key={element.id} value={element.id}
-                                disabled={element.etat !== "disponible"}>
+                                disabled={element.etat !== "disponible"}
+                            >
                                 {element.id}
                             </MenuItem>
                         })
@@ -143,13 +128,13 @@ function Trajet() {
                 >
                     {
                         data.ville.map((element) => {
-                            return <MenuItem 
-                            key={element.code} 
-                            value={element.nom}
-                            disabled={element.code == Villearr}
-                            onClick={(e) => {
-                                setVilledep(element.code)
-                            }}
+                            return <MenuItem
+                                key={element.code}
+                                value={element.nom}
+                                disabled={element.code == Villearr}
+                                onClick={(e) => {
+                                    setVilledep(element.code)
+                                }}
                             >
                                 {element.nom}
                             </MenuItem>
@@ -178,24 +163,24 @@ function Trajet() {
                 <TextField
                     label="TimeB"
                     helperText="AAAA-MM-JJ HH:MM:SS"
-                    inputProps={{pattern:'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'}}
+                    inputProps={{ pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' }}
                     value={hd}
                     onChange={(e) => sethd(e.target.value)}
                 />
                 <TextField
                     label="TimeA"
                     helperText="AAAA-MM-JJ HH:MM:SS"
-                    inputProps={{pattern:'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}'}}
+                    inputProps={{ pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' }}
                     value={ha}
                     onChange={(e) => setha(e.target.value)}
                 />
-                        
-                <Button 
-                color="primary" 
-                startIcon={<AddIcon />} 
-                type="submit" 
-                variant="outlined"
-                disabled={!ha || !hd || !Villearr || !Villedep || !Bus }
+
+                <Button
+                    color="primary"
+                    startIcon={<AddIcon />}
+                    type="submit"
+                    variant="outlined"
+                    disabled={!ha || !hd || !Villearr || !Villedep || !Bus}
                 >
                     Add
                 </Button>
@@ -231,7 +216,6 @@ function Trajet() {
                                         <TableCell align="center" padding="checkbox" >
                                             {Counter}
                                         </TableCell>
-                                        <TableCell align="center" >Info</TableCell>
                                         <TableCell align="center" >ID</TableCell>
                                         <TableCell align="center" >Bus_id</TableCell>
                                         <TableCell align="center">ville_dep</TableCell>
@@ -257,17 +241,15 @@ function Trajet() {
                         }}  >
                         <AddIcon />
                     </IconButton>
-
-                    <Button
-                        disabled={Counter == 0}
-                        startIcon={<DeleteIcon />}
-                        color="secondary"
-                        variant="outlined"
-                        onClick={() => DeleteElements(SelectedList)}
-                    >
-                        Delete
-                </Button>
-
+                        <Button
+                            disabled={Counter == 0}
+                            startIcon={<DeleteIcon />}
+                            color="secondary"
+                            variant="outlined"
+                            onClick={() => DeleteElements(SelectedList)}
+                        >
+                            Delete
+                        </Button>
                 </Box>
                 {FormCompo ? <Form /> : null}
             </ThemeProvider >

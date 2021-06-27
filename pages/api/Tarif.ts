@@ -14,16 +14,8 @@ handler.get(async (req, res) => {
                         typer: true
                     }
                 },
-                ville_troncon_ville_depToville: {
-                    select: {
-                        nom: true
-                    }
-                },
-                ville_troncon_ville_arrToville: {
-                    select: {
-                        nom: true
-                    }
-                },
+                ville_troncon_ville_depToville: true,
+                ville_troncon_ville_arrToville: true,
                 prix: true
             }
         })

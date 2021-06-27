@@ -10,17 +10,17 @@ DROP TABLE IF EXISTS Route CASCADE ;
 
 
 CREATE TABLE BUS(
-    Id INTEGER PRIMARY key,
-    Capacité int NOT NULL,
+    Id INTEGER PRIMARY KEY,
+    Capacité INT NOT NULL,
     dateA DATE,
-    Etat Varchar(50) NOT NULL
+    Etat VARCHAR(50) NOT NULL
 );
 
 
 CREATE TABLE Employee(
     Matricule SERIAL PRIMARY KEY,
-    Nom varchar(255),
-    Prénom varchar(255),
+    Nom VARCHAR(255),
+    Prénom VARCHAR(255),
     Date_de_naissance DATE,
     date_enmbauche DATE
 );
@@ -35,12 +35,12 @@ CREATE TABLE Chauffeur(
 CREATE TABLE Controleur(
     id SERIAL PRIMARY KEY,
     Emp_Matricule INTEGER unique,
-    Niveau_Scolaire Varchar,
+    Niveau_Scolaire VARCHAR,
     CONSTRAINT fk_Emp_Controleur FOREIGN KEY(Emp_Matricule) REFERENCES Employee(Matricule) ON DELETE CASCADE
 );
 CREATE TABLE Ville(
     Code SERIAL PRIMARY KEY,
-    Nom Varchar(255) not null
+    Nom VARCHAR(255) not null
 );
 
 CREATE TABLE Trajet(
@@ -57,12 +57,12 @@ CREATE TABLE Trajet(
 
 CREATE TABLE Route(
     id SERIAL PRIMARY KEY,
-    TypeR Varchar(50) not null,
+    TypeR VARCHAR(50) not null,
     distance INTEGER
 );
 
 CREATE TABLE Troncon(
-    Id SERIAL PRIMARY Key,
+    Id SERIAL PRIMARY KEY,
     Prix float not null,
     Ville_dep INTEGER ,
     Ville_arr INTEGER , 
@@ -112,4 +112,3 @@ INSERT INTO troncon(Ville_dep,Ville_arr,code_route,Prix) VALUES(1,2,1,5),
 INSERT INTO TT(Temp_P,Code_Trajet,Code_Troncon) Values('2021-06-10 11:00:00',1,1),
 ('2021-06-10 12:00:00',1,3),
 ('2021-06-10 14:00:00',1,5);
-
