@@ -255,7 +255,7 @@ function Home() {
                                                                         label="Prix"
                                                                         value={Prix}
                                                                         inputProps={{ min: 1 }}
-                                                                        onChange={(e) => setPrix(Number.parseInt(e.target.value))}
+                                                                        onChange={(e) => setPrix(Number.parseInt(e.target.value)>0?Number.parseInt(e.target.value):Prix)}
                                                                     />
                                                                 </TableCell>
                                                             </TableRow>
