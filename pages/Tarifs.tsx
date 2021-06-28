@@ -186,10 +186,13 @@ function Home() {
                                                         <Table>
                                                             <TableRow>
                                                                 <TableCell align='center' colSpan={2}>
-                                                                    <Button color="primary" variant='outlined' onClick={() => {
-                                                                        AddTarif()
+                                                                    <Button color="primary"
+                                                                        variant='outlined'
+                                                                        disabled={Prix <= 0}
+                                                                        onClick={() => {
+                                                                            AddTarif()
 
-                                                                    }} >Add</Button>
+                                                                        }} >Add</Button>
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <TextField
@@ -254,8 +257,10 @@ function Home() {
                                                                         variant="outlined"
                                                                         label="Prix"
                                                                         value={Prix}
+                                                                        error={Prix <= 0}
+                                                                        helperText={Prix <= 0 ? "Prix > 0" : null}
                                                                         inputProps={{ min: 1 }}
-                                                                        onChange={(e) => setPrix(Number.parseInt(e.target.value)>0?Number.parseInt(e.target.value):Prix)}
+                                                                        onChange={(e) => setPrix(Number.parseInt(e.target.value))}
                                                                     />
                                                                 </TableCell>
                                                             </TableRow>
@@ -275,88 +280,88 @@ function Home() {
                         flexDirection="row-reverse" >
                         <Tooltip title="Delete" arrow>
                             <span>
-                            <IconButton
-                                disabled={Counter == 0}
-                                color={'secondary'}
-                                onClick={() => {
-                                    DeleteElements(SelectedList)
-                                }
-                                }
-                            >
-                                <DeleteIcon />
-                            </IconButton>
+                                <IconButton
+                                    disabled={Counter == 0}
+                                    color={'secondary'}
+                                    onClick={() => {
+                                        DeleteElements(SelectedList)
+                                    }
+                                    }
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
                             </span>
                         </Tooltip>
                     </Box>
 
-                        <Box className={classes.root}
-                            flexGrow={1}
-                            display="flex"
-                            justifyContent="space-around"
-                            alignItems="center">
-                            <TextField
-                                select
-                                label="Ville_départ"
-                                value={vd}
-                                onChange={(e) => { setVd(e.target.value) }}
+                    <Box className={classes.root}
+                        flexGrow={1}
+                        display="flex"
+                        justifyContent="space-around"
+                        alignItems="center">
+                        <TextField
+                            select
+                            label="Ville_départ"
+                            value={vd}
+                            onChange={(e) => { setVd(e.target.value) }}
 
-                                variant="outlined"
-                            >
-                                {
-                                    data.villes.map((element) => {
-                                        return <MenuItem
-                                            key={element.code}
-                                            value={element.code}
-                                            disabled={element.code == va}
+                            variant="outlined"
+                        >
+                            {
+                                data.villes.map((element) => {
+                                    return <MenuItem
+                                        key={element.code}
+                                        value={element.code}
+                                        disabled={element.code == va}
 
-                                        >
-                                            {element.nom}
-                                        </MenuItem>
-                                    })
-                                }
-                            </TextField>
-                            <TextField
-                                select
-                                label="Ville_arrivée"
-                                value={va}
-                                onChange={(e) => { setVa(e.target.value) }}
-                                variant="outlined"
-                            >
-                                {
-                                    data.villes.map((element) => {
-                                        return <MenuItem
-                                            key={element.code}
-                                            value={element.code}
-                                            disabled={element.code == vd}
-                                        >
-                                            {element.nom}
-                                        </MenuItem>
-                                    })
-                                }
-                            </TextField>
-                            <TextField select
-                                label="Route"
-                                variant="outlined"
-                                value={R}
-                                onChange={(e) => setR(e.target.value)}
-                            >
-                                <MenuItem
-                                    value={"route nationale"}
-                                >route nationale</MenuItem>
-                                <MenuItem
-                                    value={"autoroute"}
-                                >autoroute</MenuItem>
-                            </TextField>
-                            <Button
-                                startIcon={<AttachMoney />}
-                                onClick={Calculer}
-                                variant='outlined'
-                                className={test.root}
-                                disabled={(!va || !vd || !R)}
-                            >Calculer
+                                    >
+                                        {element.nom}
+                                    </MenuItem>
+                                })
+                            }
+                        </TextField>
+                        <TextField
+                            select
+                            label="Ville_arrivée"
+                            value={va}
+                            onChange={(e) => { setVa(e.target.value) }}
+                            variant="outlined"
+                        >
+                            {
+                                data.villes.map((element) => {
+                                    return <MenuItem
+                                        key={element.code}
+                                        value={element.code}
+                                        disabled={element.code == vd}
+                                    >
+                                        {element.nom}
+                                    </MenuItem>
+                                })
+                            }
+                        </TextField>
+                        <TextField select
+                            label="Route"
+                            variant="outlined"
+                            value={R}
+                            onChange={(e) => setR(e.target.value)}
+                        >
+                            <MenuItem
+                                value={"route nationale"}
+                            >route nationale</MenuItem>
+                            <MenuItem
+                                value={"autoroute"}
+                            >autoroute</MenuItem>
+                        </TextField>
+                        <Button
+                            startIcon={<AttachMoney />}
+                            onClick={Calculer}
+                            variant='outlined'
+                            className={test.root}
+                            disabled={(!va || !vd || !R)}
+                        >Calculer
                             </Button>
-                            <h2 style={{ color: "white" }}>{result + " DT"}</h2>
-                        </Box>
+                        <h2 style={{ color: "white" }}>{result + " DT"}</h2>
+                    </Box>
                 </ThemeProvider >
             </>
         )
