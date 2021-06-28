@@ -166,10 +166,10 @@ function Home() {
                                         <TableRow>
                                             <TableCell align="center">{Counter}</TableCell>
                                             <TableCell align="center">ID</TableCell>
-                                            <TableCell align="center">ville_dep</TableCell>
-                                            <TableCell align="center">ville_des</TableCell>
-                                            <TableCell align="center">typer</TableCell>
-                                            <TableCell align="center">prix</TableCell>
+                                            <TableCell align="center">Ville_départ</TableCell>
+                                            <TableCell align="center">Ville_destinataire</TableCell>
+                                            <TableCell align="center">Typer</TableCell>
+                                            <TableCell align="center">Prix</TableCell>
                                         </TableRow>
                                     </StyledTableHead>
                                     <TableBody>
@@ -198,7 +198,7 @@ function Home() {
                                                                             setVille_dep(e.target.value)
                                                                         }}
                                                                         select
-                                                                        label="Ville_dep"
+                                                                        label="Ville_départ"
                                                                         variant="outlined"
                                                                     >
                                                                         {
@@ -219,7 +219,7 @@ function Home() {
                                                                 <TableCell align="center">
                                                                     <TextField
                                                                         select
-                                                                        label="Ville_arr"
+                                                                        label="Ville_arrivée"
                                                                         variant="outlined"
                                                                         value={Ville_arr}
                                                                         onChange={(e) => setVille_arr(e.target.value)}
@@ -296,7 +296,7 @@ function Home() {
                             alignItems="center">
                             <TextField
                                 select
-                                label="Ville_dep"
+                                label="Ville_départ"
                                 value={vd}
                                 onChange={(e) => { setVd(e.target.value) }}
 
@@ -317,7 +317,7 @@ function Home() {
                             </TextField>
                             <TextField
                                 select
-                                label="Ville_arr"
+                                label="Ville_arrivée"
                                 value={va}
                                 onChange={(e) => { setVa(e.target.value) }}
                                 variant="outlined"

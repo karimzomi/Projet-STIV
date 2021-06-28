@@ -123,8 +123,8 @@ function Trajet() {
                 </TextField>
                 <TextField
                     select
-                    label="Ville_dep"
-                    helperText="Select Bus Id"
+                    label="Ville_départ"
+                    helperText="Select Ville de départ"
                 >
                     {
                         data.ville.map((element) => {
@@ -144,8 +144,8 @@ function Trajet() {
                 </TextField>
                 <TextField
                     select
-                    label="Ville_arr"
-
+                    label="Ville_arrivée"
+                    helperText="Select Ville d'arrivée"
                 >
                     {
                         data.ville.map((element) => {
@@ -161,14 +161,14 @@ function Trajet() {
 
                 </TextField>
                 <TextField
-                    label="TimeB"
+                    label="heure_de_départ"
                     helperText="AAAA-MM-JJ HH:MM:SS"
                     inputProps={{ pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' }}
                     value={hd}
                     onChange={(e) => sethd(e.target.value)}
                 />
                 <TextField
-                    label="TimeA"
+                    label="heure_d'arrivée"
                     helperText="AAAA-MM-JJ HH:MM:SS"
                     inputProps={{ pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' }}
                     value={ha}
@@ -218,10 +218,10 @@ function Trajet() {
                                         </TableCell>
                                         <TableCell align="center" >ID</TableCell>
                                         <TableCell align="center" >Bus_id</TableCell>
-                                        <TableCell align="center">ville_dep</TableCell>
-                                        <TableCell align="center">ville_des</TableCell>
-                                        <TableCell align="center">hd</TableCell>
-                                        <TableCell align="center">ha</TableCell>
+                                        <TableCell align="center">Ville_départ</TableCell>
+                                        <TableCell align="center">Ville_arrivée</TableCell>
+                                        <TableCell align="center">Heure_de_départ</TableCell>
+                                        <TableCell align="center">Heure_d'arrivée</TableCell>
                                     </StyledTableRow>
                                 </StyledTableHead>
                                 <TableBody >
